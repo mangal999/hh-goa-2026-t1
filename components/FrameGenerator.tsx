@@ -161,7 +161,7 @@ export default function FrameGenerator() {
     if (!blob) return;
     setSharing(true);
     try {
-      const caption = buildCaption(input.builderTitle || undefined, input.name || undefined);
+      const caption = buildCaption(input.name || undefined);
       const fileResult = await shareImageWithCaption(
         blob,
         format === "pfp" ? "hh-goa-pfp.png" : "hh-goa-builder-id.png",
@@ -169,9 +169,14 @@ export default function FrameGenerator() {
       );
       if (fileResult.handled) return;
 
-      const img = stored ?? (await store(blob));
-      if (!stored) setStored(img);
-      const shareUrl = `${window.location.origin}/share/${img.id}?img=${encodeURIComponent(img.url)}`;
+      let shareUrl: string | undefined;
+      try {
+        const img = stored ?? (await store(blob));
+        if (!stored) setStored(img);
+        shareUrl = `${window.location.origin}/share/${img.id}?img=${encodeURIComponent(img.url)}`;
+      } catch {
+        shareUrl = undefined;
+      }
       window.open(tweetIntentUrl(caption, shareUrl), "_blank", "noopener,noreferrer");
       setSharing(false);
     } catch (e) {

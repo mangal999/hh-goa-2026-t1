@@ -1,11 +1,16 @@
 export const CAPTION = "My HH Goa 2026 badge 🌴 Built with the HH Goa Frame Generator. #FrameInGoa #HackerHouseGoa #247Builders";
 
-export function buildCaption(builderTitle?: string, name?: string): string {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hhgoa-frame.vercel.app";
+
+export function buildCaption(name?: string): string {
   const parts: string[] = [];
-  if (name) parts.push(name);
-  if (builderTitle) parts.push(`— ${builderTitle}`);
-  parts.push("#FrameInGoa #HackerHouseGoa");
-  return parts.join(" ");
+  if (name) parts.push(`${name} —`);
+  parts.push(
+    "Just locked in my HH Goa '26 pass 🪪🌴 Terminal in the tropics — peep my frame, then build and ship yours 👇"
+  );
+  parts.push(BASE_URL);
+  parts.push("#FrameInGoa #HackerHouseGoa #HHGoa26");
+  return parts.join("\n");
 }
 
 export function tweetIntentUrl(caption: string, url?: string): string {
