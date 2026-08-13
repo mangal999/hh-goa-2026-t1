@@ -191,7 +191,8 @@ export default function FrameGenerator() {
       } catch {
         shareUrl = undefined;
       }
-      window.open(tweetIntentUrl(caption, shareUrl), "_blank", "noopener,noreferrer");
+      const text = shareUrl ? `${caption}\n\n${shareUrl}` : caption;
+      window.open(tweetIntentUrl(text, shareUrl), "_blank", "noopener,noreferrer");
       setSharing(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Share failed. Try downloading instead.");
