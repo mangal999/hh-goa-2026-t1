@@ -14,8 +14,9 @@ export function buildCaption(name?: string): string {
 }
 
 export function tweetIntentUrl(caption: string, url?: string): string {
-  const text = url ? `${caption}\n${url}` : caption;
-  return `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  const params = new URLSearchParams({ text: caption });
+  if (url) params.set("url", url);
+  return `https://x.com/intent/tweet?${params.toString()}`;
 }
 
 export interface ShareFileResult {
