@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
     const stored = await put(pathname, blob.stream(), {
       access: "public",
       addRandomSuffix: false,
-      token: process.env.BLOB_READ_WRITE_TOKEN,
       contentType: blob.type || "image/png",
+      ...(process.env.BLOB_READ_WRITE_TOKEN ? { token: process.env.BLOB_READ_WRITE_TOKEN } : {}),
     });
     return Response.json({ id, url: stored.url });
   } catch {
