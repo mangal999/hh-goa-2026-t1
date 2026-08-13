@@ -187,11 +187,12 @@ export default function FrameGenerator() {
         if (!jpgBlob) throw new Error("Could not compress image");
         const img = stored ?? (await store(jpgBlob, `${name}.jpg`));
         if (!stored) setStored(img);
-        shareUrl = `${window.location.origin}/share/${img.id}?img=${encodeURIComponent(img.url)}`;
+        shareUrl = `${window.location.origin}/share/${img.id}`;
       } catch {
         shareUrl = undefined;
       }
-      window.open(tweetIntentUrl(caption, shareUrl), "_blank", "noopener,noreferrer");
+      const text = shareUrl ? `${caption}\n\n${shareUrl}` : caption;
+      window.open(tweetIntentUrl(text), "_blank", "noopener,noreferrer");
       setSharing(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Share failed. Try downloading instead.");

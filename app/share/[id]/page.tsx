@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { list } from "@vercel/blob";
 
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+async function resolveFrameUrl(id: string): Promise<string | undefined> {
+  try {
+    const { blobs } = await list({ prefix: `frames/${id}` });
+    const match = blobs.find((b) => b.pathname.startsWith(`frames/${id}.`));
+    return match?.url;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { id } = await params;
   const sp = await searchParams;
-  const img = typeof sp.img === "string" ? sp.img : undefined;
+  const legacyImg = typeof sp.img === "string" ? sp.img : undefined;
+  const img = (await resolveFrameUrl(id)) ?? legacyImg;
   const meta = {
     title: `HH Goa 2026 · ${id.slice(0, 8)}`,
     description: "My HH Goa 2026 frame 🌴 #FrameInGoa",
@@ -42,7 +54,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 export default async function SharePage({ params, searchParams }: Props) {
   const { id } = await params;
   const sp = await searchParams;
-  const img = typeof sp.img === "string" ? sp.img : undefined;
+  const legacyImg = typeof sp.img === "string" ? sp.img : undefined;
+  const img = (await resolveFrameUrl(id)) ?? legacyImg;
 
   if (!img) {
     return (
