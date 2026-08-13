@@ -189,9 +189,11 @@ export default function FrameGenerator() {
             <h1 className="font-imbue text-3xl font-bold uppercase leading-none tracking-tight">
               HH Goa <span style={{ color: BRAND.yellow }}>2026</span>
             </h1>
-            <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-white/60">
-              Less Noise. More Signal
-            </p>
+<p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-white/60">
+                Less Noise.
+                <br className="sm:hidden" />
+                More Signal
+              </p>
           </div>
         </div>
         <a
@@ -200,7 +202,7 @@ export default function FrameGenerator() {
           rel="noopener noreferrer"
           className="rounded-full border-2 border-[#FEE101] px-4 py-2 font-mono text-xs font-bold tracking-widest text-[#FEE101] transition-colors hover:bg-[#FEE101] hover:text-[#0B6839]"
         >
-          HH Goa 2026
+          OCT 28–31
         </a>
       </header>
 
