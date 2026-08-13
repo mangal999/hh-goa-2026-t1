@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Imbue";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url(/assets/fonts/imbue-latin.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Victor Mono";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(/assets/fonts/victor-mono-latin.woff2) format("woff2");
+}
+
+:root {
+  --background: #0b6839;
+  --foreground: #ffffff;
+  --hh-imbue: "Imbue";
+  --hh-mono: "Victor Mono";
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--hh-imbue);
+  --font-mono: var(--hh-mono);
+  --font-imbue: var(--hh-imbue);
+  --font-victor-mono: var(--hh-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: #fee101;
+  color: #0b6839;
+}
