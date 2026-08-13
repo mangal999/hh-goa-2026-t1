@@ -15,18 +15,26 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     description: "My HH Goa 2026 frame 🌴 #FrameInGoa",
   };
   if (!img) return { ...meta, openGraph: meta, twitter: { card: "summary" } };
+  const imageMeta = {
+    url: img,
+    secureUrl: img,
+    type: "image/jpeg",
+    alt: "My HH Goa 2026 frame — check it out",
+  };
   return {
     ...meta,
     openGraph: {
       ...meta,
+      siteName: "HH Goa 2026",
       url: "https://hhgoa.com",
       type: "website",
-      images: [img],
+      images: [imageMeta],
     },
     twitter: {
-      ...meta,
       card: "summary_large_image",
-      images: [img],
+      title: meta.title,
+      description: meta.description,
+      images: [imageMeta],
     },
   };
 }
