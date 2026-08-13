@@ -90,13 +90,26 @@ export default function FrameGenerator() {
     };
   }, []);
 
-  const renderToDataUrl = useCallback(
-    async (fmt: Format): Promise<string | null> => {
+  const renderCanvas = useCallback(
+    async (fmt: Format): Promise<HTMLCanvasElement | null> => {
       const { renderToCanvas } = await import("@/lib/render");
-      const out = await renderToCanvas(fmt, { img, input, crop, fonts: fonts() });
-      return out.toDataURL("image/png");
+      return renderToCanvas(fmt, { img, input, crop, fonts: fonts() });
     },
     [img, input, crop, fonts]
+  );
+
+  const canvasToBlob = useCallback(
+    (canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob | null> =>
+      new Promise((resolve) => canvas.toBlob((b) => resolve(b), type, quality)),
+    []
+  );
+
+  const renderToDataUrl = useCallback(
+    async (fmt: Format): Promise<string | null> => {
+      const canvas = await renderCanvas(fmt);
+      return canvas ? canvas.toDataURL("image/png") : null;
+    },
+    [renderCanvas]
   );
 
   // Debounced preview render
@@ -146,32 +159,33 @@ export default function FrameGenerator() {
   }, [generateBlob, format]);
 
   const store = useCallback(
-    async (blob: Blob): Promise<StoredImage> => {
+    async (blob: Blob, name: string): Promise<StoredImage> => {
       const data = new FormData();
-      data.append("image", blob, format === "pfp" ? "hh-goa-pfp.png" : "hh-goa-builder-id.png");
+      data.append("image", blob, name);
       const res = await fetch("/api/store", { method: "POST", body: data });
       if (!res.ok) throw new Error("Could not host image for sharing");
       return res.json();
     },
-    [format]
+    []
   );
 
   const share = useCallback(async () => {
-    const blob = await generateBlob();
-    if (!blob) return;
+    const canvas = await renderCanvas(format);
+    if (!canvas) return;
     setSharing(true);
     try {
+      const name = format === "pfp" ? "hh-goa-pfp" : "hh-goa-builder-id";
       const caption = buildCaption(input.name || undefined);
-      const fileResult = await shareImageWithCaption(
-        blob,
-        format === "pfp" ? "hh-goa-pfp.png" : "hh-goa-builder-id.png",
-        caption
-      );
+      const pngBlob = await canvasToBlob(canvas, "image/png");
+      if (!pngBlob) throw new Error("Could not render image");
+      const fileResult = await shareImageWithCaption(pngBlob, `${name}.png`, caption);
       if (fileResult.handled) return;
 
       let shareUrl: string | undefined;
       try {
-        const img = stored ?? (await store(blob));
+        const jpgBlob = await canvasToBlob(canvas, "image/jpeg", 0.9);
+        if (!jpgBlob) throw new Error("Could not compress image");
+        const img = stored ?? (await store(jpgBlob, `${name}.jpg`));
         if (!stored) setStored(img);
         shareUrl = `${window.location.origin}/share/${img.id}?img=${encodeURIComponent(img.url)}`;
       } catch {
@@ -183,7 +197,7 @@ export default function FrameGenerator() {
       setError(e instanceof Error ? e.message : "Share failed. Try downloading instead.");
       setSharing(false);
     }
-  }, [generateBlob, format, input, stored, store]);
+  }, [renderCanvas, canvasToBlob, format, input, stored, store]);
 
   return (
     <div className="flex min-h-screen flex-col">

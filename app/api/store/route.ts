@@ -1,5 +1,6 @@
 import { put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
+import { extname } from "node:path";
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -12,14 +13,15 @@ export async function POST(request: NextRequest) {
 
   const blob = file as File;
   const id = randomUUID();
-  const pathname = `frames/${id}.png`;
+  const ext = extname(blob.name) || ".png";
+  const pathname = `frames/${id}${ext}`;
 
   try {
     const stored = await put(pathname, blob.stream(), {
       access: "public",
       addRandomSuffix: false,
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      contentType: "image/png",
+      contentType: blob.type || "image/png",
     });
     return Response.json({ id, url: stored.url });
   } catch {
