@@ -8,8 +8,8 @@ export function buildCaption(name?: string): string {
   parts.push(
     "Just locked in my HH Goa '26 pass 🪪🌴 Terminal in the tropics — peep my frame, then build and ship yours 👇"
   );
-  parts.push(BASE_URL);
-  parts.push("#FrameInGoa #HackerHouseGoa #HHGoa26 @247pmstudio");
+  parts.push(BASE_URL + "\n\n");
+  parts.push("#FrameInGoa #HackerHouseGoa \n#HHGoa26 @247pmstudio");
   return parts.join("\n");
 }
 

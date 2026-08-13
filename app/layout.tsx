@@ -3,22 +3,22 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://hhgoa-frame.vercel.app"),
-  title: "HH Goa 2026 Frame Generator",
+  title: "Get your HH Goa 2026 pass",
   description:
     "Upload a photo, get an instantly branded HH Goa 2026 PFP frame or Builder ID card. Download and share to X with #FrameInGoa.",
   openGraph: {
-    title: "HH Goa 2026 Frame Generator",
+    title: "Get your HH Goa 2026 pass",
     description: "Instantly branded HH Goa 2026 PFP frame & Builder ID. #FrameInGoa",
     url: "https://hhgoa.com",
     siteName: "HH Goa 2026",
     type: "website",
-    images: [{ url: "/assets/goa_hindi.svg", width: 512, height: 512 }],
+    images: [{ url: "/assets/Hacker_house.png", width: 1148, height: 237 }],
   },
   twitter: {
     card: "summary",
-    title: "HH Goa 2026 Frame Generator",
+    title: "Get your HH Goa 2026 pass",
     description: "Get branded with #FrameInGoa",
-    images: ["/assets/goa_hindi.svg"],
+    images: ["/assets/Hacker_house.png"],
   },
 };
 
